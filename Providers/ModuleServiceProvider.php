@@ -35,8 +35,11 @@ class ModuleServiceProvider extends BaseModuleServiceProvider {
      * @return void
      */
     public function boot() {
+        parent::boot();
         // Your module's boot logic here
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(AdminMenuServiceProvider::class);
+        $this->app->register(VideoSettingsServiceProvider::class);
         $this->app->register(PluginServiceProvider::class);
         $this->ViewPaths();
         $this->adminViewPaths();

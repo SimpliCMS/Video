@@ -13,8 +13,7 @@ class UpdateVideo extends FormRequest implements UpdateVideoContract {
         return [
             'name' => 'required|min:2|max:255',
             'state' => ['required', Rule::in(VideoStateProxy::values())],
-            'images' => 'nullable',
-            'images.*' => 'nullable|image|mimes:jpg,jpeg,pjpg,png,gif,webp'
+            'url' => 'nullable',
         ];
     }
 

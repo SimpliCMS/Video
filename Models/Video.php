@@ -24,6 +24,7 @@ class Video extends Model implements VideoContract, HasMedia {
     protected $fillable = [
         'name',
         'slug',
+        'url',
         'excerpt',
         'description',
         'state',

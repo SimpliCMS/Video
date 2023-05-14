@@ -12,6 +12,7 @@ class CreateVideosTable extends Migration {
             $table->increments('id');
             $table->string('name');
             $table->string('slug')->nullable();
+            $table->string('url')->nullable();
             $table->text('excerpt')->nullable();
             $table->text('description')->nullable();
             $table->enum('state', VideoState::values())->nullable();
