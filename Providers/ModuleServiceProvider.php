@@ -4,24 +4,37 @@ namespace Modules\Video\Providers;
 
 use Konekt\Concord\BaseModuleServiceProvider;
 use Illuminate\Support\Facades\DB;
+use Modules\Video\Models\Video;
+use Modules\Video\Models\VideoState;
+use Modules\Video\Http\Requests\CreateVideo;
+use Modules\Video\Http\Requests\UpdateVideo;
 use Schema;
 
-class ModuleServiceProvider extends BaseModuleServiceProvider
-{
+class ModuleServiceProvider extends BaseModuleServiceProvider {
+
     /**
      * The namespace for the module's models.
      *
      * @var string
      */
     protected $modelNamespace = 'Modules\Video\Models';
+    protected $models = [
+        Video::class,
+    ];
+    protected $enums = [
+        VideoState::class,
+    ];
+    protected $requests = [
+        CreateVideo::class,
+        UpdateVideo::class,
+    ];
 
     /**
      * Bootstrap the module services.
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         // Your module's boot logic here
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(PluginServiceProvider::class);
@@ -34,11 +47,10 @@ class ModuleServiceProvider extends BaseModuleServiceProvider
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         // Your module's register logic here
     }
-    
+
     public function ViewPaths() {
         $moduleLower = lcfirst('Video');
         if (Schema::hasTable('settings')) {
@@ -66,7 +78,7 @@ class ModuleServiceProvider extends BaseModuleServiceProvider
             base_path("themes/$currentTheme/views/modules/Video"),
         ];
 
-        return $this->loadViewsFrom($views, $moduleLower.'-admin');
+        return $this->loadViewsFrom($views, $moduleLower . '-admin');
     }
-}
 
+}
