@@ -11,7 +11,7 @@ class UpdateVideo extends FormRequest implements UpdateVideoContract {
 
     public function rules() {
         return [
-            'name' => 'required|min:2|max:255',
+            'name' => 'nullable|min:2|max:255',
             'state' => ['required', Rule::in(VideoStateProxy::values())],
             'url' => 'nullable',
         ];

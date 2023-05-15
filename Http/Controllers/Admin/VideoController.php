@@ -8,6 +8,7 @@ use Modules\Core\Http\Controllers\Controller;
 use Modules\Video\Contracts\Requests\CreateVideo;
 use Modules\Video\Contracts\Requests\UpdateVideo;
 use Modules\Video\Contracts\Video;
+use Alaouy\Youtube\Facades\Youtube;
 use Modules\Video\Models\VideoProxy;
 use Modules\Video\Models\VideoStateProxy;
 
@@ -28,7 +29,7 @@ class VideoController extends Controller {
      */
     public function create() {
         return view('video-admin::create', [
-            'bookable' => app(Video::class),
+            'video' => app(Video::class),
             'states' => VideoStateProxy::choices()
         ]);
     }
@@ -40,8 +41,36 @@ class VideoController extends Controller {
      */
     public function store(CreateVideo $request) {
         try {
-            $video = VideoProxy::create($request->except('images'));
-            flash()->success(__(':name has been created', ['name' => $bookable->name]));
+
+            if ($request->has('url') && !empty($request->input('url'))) {
+                $videoUrl = $request->input('url');
+
+                // Extract the video ID from the URL
+                $videoId = Youtube::parseVidFromURL($videoUrl);
+
+                // Fetch video data
+                $videoData = Youtube::getVideoInfo($videoId);
+                $embedHtml = $videoData->snippet->embedHtml;
+
+                // Extract the URL from the embed HTML
+                preg_match('/src="([^"]+)"/', $embedHtml, $matches);
+                $embedUrl = $matches[1];
+                // Access the desired properties from the video data
+                $title = $videoData->snippet->title;
+                $description = $videoData->snippet->description;
+                $thumbnailUrl = $videoData->snippet->thumbnails->default->url;
+
+                $video = VideoProxy::create([
+                            'name' => $title,
+                            'url' => $embedUrl,
+                            'description' => $description,
+                            'state' => $request->input('state')
+                ]);
+            } else {
+                $video = VideoProxy::create($request->except('video'));
+            }
+
+            flash()->success(__(':name has been created', ['name' => $video->name]));
 
             try {
                 if (!empty($request->files->filter('images'))) {
@@ -94,7 +123,27 @@ class VideoController extends Controller {
     public function update(Video $video, UpdateVideo $request) {
         try {
             $video->update($request->all());
+            if ($request->has('url') && !empty($request->input('url'))) {
+                $videoUrl = $request->input('url');
 
+                // Extract the video ID from the URL
+                $videoId = Youtube::parseVidFromURL($videoUrl);
+
+                // Fetch video data
+                $videoData = Youtube::getVideoInfo($videoId);
+                $embedid = $videoData->id;
+
+                // Extract the URL from the embed HTML
+                // Access the desired properties from the video data
+                $title = $videoData->snippet->title;
+                $description = $videoData->snippet->description;
+                $thumbnailUrl = $videoData->snippet->thumbnails->default->url;
+                $video->name = $title;
+                $video->url = 'https://www.youtube.com/embed/'.$embedid;
+                $video->description = $description;
+                $video->is_upload = true;
+                $video->save();
+            }
             flash()->success(__(':name has been updated', ['name' => $video->name]));
         } catch (\Exception $e) {
             flash()->error(__('Error: :msg', ['msg' => $e->getMessage()]));

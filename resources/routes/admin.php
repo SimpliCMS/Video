@@ -18,4 +18,5 @@ Route::group(['prefix' => 'video'], function () {
     Route::put('{video}', 'VideoController@update')->name('video.admin.update');
     Route::delete('{video}', 'VideoController@destroy')->name('video.admin.destroy');
     Route::get('{video}/edit', 'VideoController@edit')->name('video.admin.edit');
+
 });

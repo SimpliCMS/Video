@@ -42,7 +42,7 @@
 
         @foreach($states as $key => $value)
         <label class="radio-inline" for="state_{{ $key }}">
-            {{ Form::radio('state', $key, $bookable->state === $key, ['id' => "state_$key"]) }}
+            {{ Form::radio('state', $key, $video->state === $key, ['id' => "state_$key"]) }}
             {{ $value }}
             &nbsp;
         </label>
@@ -58,7 +58,7 @@
 <div class="form-group">
     <label>{{ __('Description (Leave Blank for url based video)') }}</label>
 
-    <textarea class="form-control" id="description" name="description" rows="10">{{ $bookable->description }}</textarea>
+    <textarea class="form-control" id="description" name="description" rows="10">{{ $video->description }}</textarea>
 
     @if ($errors->has('description'))
     <div class="invalid-feedback">{{ $errors->first('description') }}</div>

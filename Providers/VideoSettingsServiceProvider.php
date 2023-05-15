@@ -20,6 +20,7 @@ class VideoSettingsServiceProvider extends ServiceProvider {
             'url' => env('APP_URL') . 'app/storage/app/video',
             'visibility' => 'public',
         ]);
+//        Config::set('youtube.key', '');
     }
 
     /**

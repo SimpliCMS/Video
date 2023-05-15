@@ -33,7 +33,7 @@
                     @foreach($videos as $video)
                     <tr>
                         <td><a href="{{ route('video.admin.edit', $video->id) }}">{{ $video->title }}</a></td>
-                        <td>{{ $bookable->slug }}</td>
+                        <td>{{ $video->slug }}</td>
                         <td>
                             <a href="{{ route('video.admin.edit', $video->id) }}" class="btn btn-info">Edit</a>
                             <form action="{{ route('video.admin.destroy', $video->id) }}" method="POST" style="display:inline;">

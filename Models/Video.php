@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Modules\Video\Models\VideoState;
 use Modules\Video\Contracts\Video as VideoContract;
 use Konekt\Enum\Eloquent\CastsEnums;
+use Konekt\User\Models\UserProxy;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -17,7 +18,7 @@ class Video extends Model implements VideoContract, HasMedia {
 
     use InteractsWithMedia;
 
-//    use CastsEnums;
+    use CastsEnums;
     use Sluggable;
     use SluggableScopeHelpers;
 
@@ -28,12 +29,15 @@ class Video extends Model implements VideoContract, HasMedia {
         'excerpt',
         'description',
         'state',
+        'service',
+        'service_id',
         'ext_title',
         'meta_keywords',
         'meta_description',
+        'user_id',
     ];
     protected $enums = [
-        'state' => 'VideoState@enumClass'
+        'state' => 'VideoStateProxy@enumClass'
     ];
 
     public function isActive(): bool {
@@ -79,6 +83,14 @@ class Video extends Model implements VideoContract, HasMedia {
                     ->width(100)
                     ->height(100);
                 });
+    }
+
+    public function getUser(): User {
+        return $this->user;
+    }
+
+    public function user() {
+        return $this->belongsTo(UserProxy::modelClass(), 'user_id');
     }
 
 }

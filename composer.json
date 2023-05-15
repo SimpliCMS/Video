@@ -8,7 +8,8 @@
         }
     ],
     "require": {
-        "php-ffmpeg/php-ffmpeg": "^1.1"
+        "php-ffmpeg/php-ffmpeg": "^1.1",
+        "alaouy/youtube": "^2.2"
     },
     "extra": {
         "laravel": {
