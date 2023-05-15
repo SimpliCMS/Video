@@ -32,7 +32,7 @@
                 <tbody>
                     @foreach($videos as $video)
                     <tr>
-                        <td><a href="{{ route('video.admin.edit', $video->id) }}">{{ $video->title }}</a></td>
+                        <td><a href="{{ route('video.admin.show', $video->id) }}">{{ $video->title }}</a></td>
                         <td>{{ $video->slug }}</td>
                         <td>
                             <a href="{{ route('video.admin.edit', $video->id) }}" class="btn btn-info">Edit</a>
