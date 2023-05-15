@@ -7,7 +7,7 @@
         </span>
         {{ Form::text('name', null, [
                 'class' => 'form-control form-control-lg' . ($errors->has('name') ? ' is-invalid' : ''),
-                'placeholder' => __('Video name')
+                'placeholder' => __('Video name leave blank for url based video')
             ])
         }}
         @if ($errors->has('name'))
@@ -25,7 +25,7 @@
         </span>
         {{ Form::text('url', null, [
                 'class' => 'form-control form-control-lg' . ($errors->has('url') ? ' is-invalid' : ''),
-                'placeholder' => __('Video URL Leave blank for Upload')
+                'placeholder' => __('Video URL leave blank for upload')
             ])
         }}
         @if ($errors->has('url'))
@@ -56,7 +56,7 @@
 @endif
 <hr>
 <div class="form-group">
-    <label>{{ __('Description (Leave Blank for url based video)') }}</label>
+    <label>{{ __('Description (Leave blank for url based video)') }}</label>
 
     <textarea class="form-control" id="description" name="description" rows="10">{{ $video->description }}</textarea>
 
