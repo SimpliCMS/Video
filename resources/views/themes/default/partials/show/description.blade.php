@@ -1,14 +1,12 @@
-<div class="card card-body">
-    {{$video->created_at->format('M d Y')}}
-</div>
 <div class="card">
     <div class="card-body">
-        <p class="card-text" id="shortText">
-            {{ Str::limit($video->description, 287) }}
-        </p>
-        <p class="card-text" id="fullText">
-            {{ $video->description }}
-        </p>
+        {{ views($video)->count() }}&nbsp;views&nbsp;&nbsp;{{ $video->timeAgo() }}
+        <div class="card-text" id="shortText">
+            {!! Str::limit($video->description, 287) !!}
+        </div>
+        <div class="card-text" id="fullText">
+            {!! $video->description !!}
+        </div>
         <a href="#" id="viewMoreLink">View More</a>
         <a href="#" id="viewLessLink">View Less</a>
     </div>

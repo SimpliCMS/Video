@@ -6,6 +6,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Video\Contracts\Video;
+use Modules\Video\Models\VideoProxy;
+use Modules\User\Models\User;
 
 class VideoController extends Controller {
 
@@ -14,7 +16,8 @@ class VideoController extends Controller {
      * @return Renderable
      */
     public function index() {
-        return view('video::index');
+        $videos = VideoProxy::all();
+        return view('video::index', compact('videos'));
     }
 
     /**
@@ -40,8 +43,11 @@ class VideoController extends Controller {
      * @return Renderable
      */
     public function show(Video $video) {
+        views($video)->record();
+        $channelUser = User::where('id',$video->user_id) -> first();
         return view('video::show', [
-            'video' => $video
+            'video' => $video,
+            'channelUser' => $channelUser
         ]);
     }
 

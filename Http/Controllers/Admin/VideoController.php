@@ -4,6 +4,7 @@ namespace Modules\Video\Http\Controllers\Admin;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Video\Contracts\Requests\CreateVideo;
 use Modules\Video\Contracts\Requests\UpdateVideo;
@@ -41,7 +42,7 @@ class VideoController extends Controller {
      */
     public function store(CreateVideo $request) {
         try {
-
+            $user = Auth::user();
             if ($request->has('url') && !empty($request->input('url'))) {
                 $videoUrl = $request->input('url');
 
@@ -50,22 +51,27 @@ class VideoController extends Controller {
 
                 // Fetch video data
                 $videoData = Youtube::getVideoInfo($videoId);
-                $embedHtml = $videoData->snippet->embedHtml;
+                $embedid = $videoData->id;
 
                 // Extract the URL from the embed HTML
-                preg_match('/src="([^"]+)"/', $embedHtml, $matches);
-                $embedUrl = $matches[1];
                 // Access the desired properties from the video data
                 $title = $videoData->snippet->title;
                 $description = $videoData->snippet->description;
-                $thumbnailUrl = $videoData->snippet->thumbnails->default->url;
+                $thumbnailUrl = $videoData->snippet->thumbnails->maxres->url;
+                $duration = $videoData->contentDetails->duration;
 
                 $video = VideoProxy::create([
                             'name' => $title,
-                            'url' => $embedUrl,
+                            'user_id' => $user->id,
+                            'url' => $request->input('url'),
+                            'service' => 'youtube',
+                            'service_id' => $embedid,
                             'description' => $description,
+                            'is_upload' => false,
                             'state' => $request->input('state')
                 ]);
+                $video->addMediaFromUrl($thumbnailUrl)
+                        ->toMediaCollection('service_image');
             } else {
                 $video = VideoProxy::create($request->except('video'));
             }
@@ -124,26 +130,32 @@ class VideoController extends Controller {
         try {
             $video->update($request->all());
             if ($request->has('url') && !empty($request->input('url'))) {
-                $videoUrl = $request->input('url');
+                if ($request->input('url') == $video->url) {
+                    
+                } else {
+                    $videoUrl = $request->input('url');
 
-                // Extract the video ID from the URL
-                $videoId = Youtube::parseVidFromURL($videoUrl);
+                    // Extract the video ID from the URL
+                    $videoId = Youtube::parseVidFromURL($videoUrl);
 
-                // Fetch video data
-                $videoData = Youtube::getVideoInfo($videoId);
-                $embedid = $videoData->id;
+                    // Fetch video data
+                    $videoData = Youtube::getVideoInfo($videoId);
+                    $embedid = $videoData->id;
 
-                // Extract the URL from the embed HTML
-                // Access the desired properties from the video data
-                $title = $videoData->snippet->title;
-                $description = $videoData->snippet->description;
-                $thumbnailUrl = $videoData->snippet->thumbnails->default->url;
-                $video->name = $title;
-                $video->url = 'https://www.youtube.com/embed/'.$embedid;
-                $video->description = $description;
-                $video->is_upload = true;
-                $video->save();
+                    // Extract the URL from the embed HTML
+                    // Access the desired properties from the video data
+                    $title = $videoData->snippet->title;
+                    $description = $videoData->snippet->description;
+                    $thumbnailUrl = $videoData->snippet->thumbnails->maxres->url;
+                    $video->name = $title;
+                    $video->url = 'https://www.youtube.com/embed/' . $embedid;
+                    $video->description = $description;
+                    $video->is_upload = false;
+                    $post->slug = null;
+                    $video->save();
+                }
             }
+
             flash()->success(__(':name has been updated', ['name' => $video->name]));
         } catch (\Exception $e) {
             flash()->error(__('Error: :msg', ['msg' => $e->getMessage()]));

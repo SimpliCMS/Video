@@ -13,11 +13,14 @@ use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use CyrildeWit\EloquentViewable\InteractsWithViews;
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
+use Carbon\Carbon;
 
-class Video extends Model implements VideoContract, HasMedia {
+class Video extends Model implements VideoContract, HasMedia, Viewable {
 
     use InteractsWithMedia;
-
+    use InteractsWithViews;
     use CastsEnums;
     use Sluggable;
     use SluggableScopeHelpers;
@@ -27,7 +30,9 @@ class Video extends Model implements VideoContract, HasMedia {
         'slug',
         'url',
         'excerpt',
+        'tags',
         'description',
+        'duration',
         'state',
         'service',
         'service_id',
@@ -63,6 +68,10 @@ class Video extends Model implements VideoContract, HasMedia {
     public function scopeInactives(Builder $query): Builder {
         return $query->whereIn('state', array_diff(BookableState::values(), BookableState::getActiveStates()));
     }
+    
+      public function timeAgo() {
+        return Carbon::parse($this->created_at)->diffForHumans();
+    }
 
     public function sluggable(): array {
         return [
@@ -73,13 +82,21 @@ class Video extends Model implements VideoContract, HasMedia {
     }
 
     public function registerMediaCollections(): void {
-        $this
-                ->addMediaCollection('videos')
+        $this->addMediaCollection('videos')
                 ->useDisk('video')
                 ->singleFile()
                 ->registerMediaConversions(function (Media $media) {
                     $this
                     ->addMediaConversion('thumbnail')
+                    ->width(100)
+                    ->height(100);
+                });
+        $this->addMediaCollection('service_image')
+                ->useDisk('video')
+                ->singleFile()
+                ->registerMediaConversions(function (Media $media) {
+                    $this
+                    ->addMediaConversion('service_thumbnail')
                     ->width(100)
                     ->height(100);
                 });

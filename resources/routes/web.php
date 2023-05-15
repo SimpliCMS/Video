@@ -11,8 +11,6 @@
 |
 */
 Route::prefix('video')->group(function () {
-    Route::get('/', function () {
-        dd('This is the Video module index page. Build something great!');
-    })->name('video.index');
+    Route::get('/', 'VideoController@index')->name('video.index');
     Route::get('{video}', 'VideoController@show')->name('video.show');
 });
