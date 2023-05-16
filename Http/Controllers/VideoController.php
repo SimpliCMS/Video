@@ -4,10 +4,12 @@ namespace Modules\Video\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Modules\Core\Http\Controllers\Controller;
 use Modules\Video\Contracts\Video;
 use Modules\Video\Models\VideoProxy;
 use Modules\User\Models\User;
+use Modules\Profile\Models\Profile;
 
 class VideoController extends Controller {
 
@@ -18,6 +20,17 @@ class VideoController extends Controller {
     public function index() {
         $videos = VideoProxy::all();
         return view('video::index', compact('videos'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
+    public function profileIndex($username) {
+        $user = User::where('username', $username)->first();
+        $profile = Profile::where('user_id', $user->id)->first();
+        $videos = VideoProxy::where('user_id', $user->id)->get();
+        return view('video::profile.index', ['user' => $user, 'profile' => $profile, 'videos' => $videos]);
     }
 
     /**
@@ -44,7 +57,7 @@ class VideoController extends Controller {
      */
     public function show(Video $video) {
         views($video)->record();
-        $channelUser = User::where('id',$video->user_id) -> first();
+        $channelUser = User::where('id', $video->user_id)->first();
         return view('video::show', [
             'video' => $video,
             'channelUser' => $channelUser
