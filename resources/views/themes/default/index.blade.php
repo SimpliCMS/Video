@@ -13,6 +13,7 @@ Videos
                 <div class="card-body">
                     <div class="row">
                         @foreach($videos->sortByDesc('created_at') as $video)
+                        @if ($video->is_active)
                         <div class="col-md-6 col-lg-4">
                             <div class="card bg-light mb-3">
                                 <a href="{{ route('video.show', $video->id) }}"><img src="{{ $video->getMedia('service_image')[0]->getUrl() }}" class="card-img-top" alt="..."></a>
@@ -22,6 +23,7 @@ Videos
                                 </div>
                             </div>
                         </div>
+                        @endif
                         @endforeach
                     </div>
                 </div>

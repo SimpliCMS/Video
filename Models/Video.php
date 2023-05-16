@@ -4,7 +4,7 @@ namespace Modules\Video\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Modules\Video\Models\VideoState;
+use Modules\Video\Models\VideoStateProxy;
 use Modules\Video\Contracts\Video as VideoContract;
 use Konekt\Enum\Eloquent\CastsEnums;
 use Konekt\User\Models\UserProxy;
@@ -13,6 +13,7 @@ use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Tags\HasTags;
 use CyrildeWit\EloquentViewable\InteractsWithViews;
 use CyrildeWit\EloquentViewable\Contracts\Viewable;
 use Carbon\Carbon;
@@ -21,6 +22,7 @@ class Video extends Model implements VideoContract, HasMedia, Viewable {
 
     use InteractsWithMedia;
     use InteractsWithViews;
+    use HasTags;
     use CastsEnums;
     use Sluggable;
     use SluggableScopeHelpers;
@@ -62,11 +64,11 @@ class Video extends Model implements VideoContract, HasMedia, Viewable {
     }
 
     public function scopeActives(Builder $query): Builder {
-        return $query->whereIn('state', BookableState::getActiveStates());
+        return $query->whereIn('state', VideoStateProxy::getActiveStates());
     }
 
     public function scopeInactives(Builder $query): Builder {
-        return $query->whereIn('state', array_diff(BookableState::values(), BookableState::getActiveStates()));
+        return $query->whereIn('state', array_diff(VideoStateProxy::values(), VideoStateProxy::getActiveStates()));
     }
     
       public function timeAgo() {
