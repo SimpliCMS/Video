@@ -13,6 +13,10 @@
             @include('video::partials.show.channel')
             @include('video::partials.show.description')
         </div>
+        
+        <div class="col-12 col-lg-8 col-xl-9">
+            @include('comment::comments', ['type' => 'video', 'type_id' => $video->id, 'comments' => $video->comments])
+        </div>
     </div>
 </div>
 @push('scripts')

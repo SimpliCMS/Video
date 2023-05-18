@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Video\Models\VideoStateProxy;
 use Modules\Video\Contracts\Video as VideoContract;
+use Modules\Comment\Models\Comment;
 use Konekt\Enum\Eloquent\CastsEnums;
 use Konekt\User\Models\UserProxy;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -70,8 +71,8 @@ class Video extends Model implements VideoContract, HasMedia, Viewable {
     public function scopeInactives(Builder $query): Builder {
         return $query->whereIn('state', array_diff(VideoStateProxy::values(), VideoStateProxy::getActiveStates()));
     }
-    
-      public function timeAgo() {
+
+    public function timeAgo() {
         return Carbon::parse($this->created_at)->diffForHumans();
     }
 
@@ -111,5 +112,7 @@ class Video extends Model implements VideoContract, HasMedia, Viewable {
     public function user() {
         return $this->belongsTo(UserProxy::modelClass(), 'user_id');
     }
-
+    public function comments() {
+        return $this->hasMany(Comment::class, 'type_id')->whereNull('parent_id');
+    }
 }
