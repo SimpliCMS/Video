@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Modules\Video\Models\VideoStateProxy;
 use Modules\Video\Contracts\Video as VideoContract;
 use Modules\Comment\Models\Comment;
+use Modules\Like\Contracts\Likeable;
+use Modules\Like\Traits\Likes;
 use Konekt\Enum\Eloquent\CastsEnums;
 use Konekt\User\Models\UserProxy;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -19,11 +21,12 @@ use CyrildeWit\EloquentViewable\InteractsWithViews;
 use CyrildeWit\EloquentViewable\Contracts\Viewable;
 use Carbon\Carbon;
 
-class Video extends Model implements VideoContract, HasMedia, Viewable {
+class Video extends Model implements VideoContract, Likeable, HasMedia, Viewable {
 
     use InteractsWithMedia;
     use InteractsWithViews;
     use HasTags;
+    use Likes;
     use CastsEnums;
     use Sluggable;
     use SluggableScopeHelpers;
@@ -33,7 +36,6 @@ class Video extends Model implements VideoContract, HasMedia, Viewable {
         'slug',
         'url',
         'excerpt',
-        'tags',
         'description',
         'duration',
         'state',
@@ -112,7 +114,9 @@ class Video extends Model implements VideoContract, HasMedia, Viewable {
     public function user() {
         return $this->belongsTo(UserProxy::modelClass(), 'user_id');
     }
+
     public function comments() {
         return $this->hasMany(Comment::class, 'type_id')->whereNull('parent_id');
     }
+
 }

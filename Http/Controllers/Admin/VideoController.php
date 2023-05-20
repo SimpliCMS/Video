@@ -148,7 +148,9 @@ class VideoController extends Controller {
                     $description = $videoData->snippet->description;
                     $thumbnailUrl = $videoData->snippet->thumbnails->maxres->url;
                     $video->name = $title;
-                    $video->url = 'https://www.youtube.com/embed/' . $embedid;
+                    $video->url = $request->input('url');
+                    $video->service = 'youtube';
+                    $video->service_id = $embedid;
                     $video->description = $description;
                     $video->is_upload = false;
                     $post->slug = null;
