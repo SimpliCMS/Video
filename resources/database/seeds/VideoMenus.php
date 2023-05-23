@@ -3,17 +3,17 @@
 namespace Modules\Video\Resources\Database\Seeds;
 
 use Illuminate\Database\Seeder;
-use Modules\Core\Models\Menu;
-use Modules\Core\Models\MenuItem;
+use Modules\Core\Models\MenuProxy;
+use Modules\Core\Models\MenuItemProxy;
 
 class VideoMenus extends Seeder
 {
     public function run()
     {
-        $mainMenu = Menu::where('name', 'Main Menu')->first();
+        $mainMenu = MenuProxy::where('name', 'Main Menu')->first();
 
 
-        $videoMenuItem = MenuItem::create([
+        $videoMenuItem = MenuItemProxy::create([
                     "name" => 'Videos',
                     "url" => 'video.index',
                     "menu_id" => $mainMenu->id,
