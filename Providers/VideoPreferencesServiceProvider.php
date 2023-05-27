@@ -4,7 +4,7 @@ namespace Modules\Video\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class VideoPreferencesProvider extends ServiceProvider
+class VideoPreferencesServiceProvider extends ServiceProvider
 {
     
     /**
