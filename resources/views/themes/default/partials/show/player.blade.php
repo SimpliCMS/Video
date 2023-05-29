@@ -1,6 +1,5 @@
 @push('style')
-<link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet">
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.3.0/video-js.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ url('modules/Video/resources/assets/css/videjs-skin.css') }}">
 @endpush
 
@@ -9,8 +8,8 @@
 </div>
 
 @push('scripts')
-<script src="https://vjs.zencdn.net/7.15.4/video.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.0/Youtube.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/8.3.0/video.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/3.0.1/Youtube.min.js"></script>
 <script>
     // Wait for the DOM to load
     document.addEventListener('DOMContentLoaded', function () {
