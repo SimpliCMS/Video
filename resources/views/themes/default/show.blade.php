@@ -3,9 +3,6 @@
 {{ $video->title }}
 @stop
 @section('content')
-@push('style')
-<link rel="stylesheet" href="{{ url('modules/Video/resources/assets/plyr/plyr.css') }}">
-@endpush
     <div class="row">
         <div class="col-11 col-lg-8 col-xl-9">
             @include('video::partials.show.player')
@@ -17,14 +14,5 @@
             @include('comment::comments', ['type' => 'video', 'type_id' => $video->id, 'comments' => $video->comments])
         </div>
     </div>
-@push('scripts')
-<script src="{{ url('modules/Video/resources/assets/plyr/plyr.js') }}"></script>
-<script>
-const player = new Plyr('#player');
-player.on('ready', (event) => {
-    player.play();
-});
-</script>
-@endpush
 @endsection
 
