@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card mt-1">
     <div class="card-body">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
